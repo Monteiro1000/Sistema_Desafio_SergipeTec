@@ -78,8 +78,17 @@ onst mockAPI = {
   },
 };
 
+//Parte visual
 
-  ]
+const STATUS_META = {
+  SOLICITADO: { label: "Solicitado", color: "#3B82F6", bg: "#EFF6FF", dot: "#2563EB" },
+  LIBERADO:   { label: "Liberado",   color: "#8B5CF6", bg: "#F5F3FF", dot: "#7C3AED" },
+  APROVADO:   { label: "Aprovado",   color: "#10B981", bg: "#ECFDF5", dot: "#059669" },
+  REJEITADO:  { label: "Rejeitado",  color: "#EF4444", bg: "#FEF2F2", dot: "#DC2626" },
+  CANCELADO:  { label: "Cancelado",  color: "#6B7280", bg: "#F9FAFB", dot: "#4B5563" },
+};
+
+
   return (
     <>
       <section id="center">
