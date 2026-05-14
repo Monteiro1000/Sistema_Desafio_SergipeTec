@@ -29,6 +29,56 @@ const mockDb = {
   ],
   nextId: 9,
 };
+
+const TRANSITIONS = {
+  SOLICITADO: ["LIBERADO", "REJEITADO"],
+  LIBERADO:   ["APROVADO", "REJEITADO"],
+  APROVADO:   ["CANCELADO"],
+  REJEITADO:  [],
+  CANCELADO:  [],
+};
+
+function status(s) {
+  const sol = mockDb.solicitantes.find(x => x.id === s.solicitanteId) || {};
+  const cat = mockDb.categorias.find(x => x.id === s.categoriaId) || {};
+  return {
+    id: s.id, descricao: s.descricao, valor: s.valor,
+    dataSolicitacao: s.dataSolicitacao, status: s.status,
+    nomeSolicitante: sol.nome, cpfCnpjSolicitante: sol.cpfCnpj,
+    nomeCategoria: cat.nome,
+  };
+}
+
+onst mockAPI = {
+  listarSolicitacoes: (filtros = {}) => {
+    let list = mockDb.solicitacoes.slice();
+    if (filtros.status)      list = list.filter(s => s.status === filtros.status);
+    if (filtros.categoriaId) list = list.filter(s => s.categoriaId === Number(filtros.categoriaId));
+    if (filtros.dataInicio)  list = list.filter(s => s.dataSolicitacao >= filtros.dataInicio);
+    if (filtros.dataFim)     list = list.filter(s => s.dataSolicitacao <= filtros.dataFim);
+    return list.map(enrich);
+  },
+  detalhar: (id) => {
+    const s = mockDb.solicitacoes.find(x => x.id === Number(id));
+    if (!s) throw new Error("Solicitação não encontrada");
+    return enrich(s);
+  },
+  criar: (dto) => {
+    const nova = { ...dto, id: mockDb.nextId++, dataSolicitacao: new Date().toISOString().slice(0,10), status: "SOLICITADO" };
+    mockDb.solicitacoes.push(nova);
+    return enrich(nova);
+  },
+  atualizarStatus: (id, novoStatus) => {
+    const s = mockDb.solicitacoes.find(x => x.id === Number(id));
+    if (!s) throw new Error("Solicitação não encontrada");
+    const permitidos = TRANSITIONS[s.status] || [];
+    if (!permitidos.includes(novoStatus)) throw new Error(`Transição ${s.status} → ${novoStatus} não permitida.`);
+    s.status = novoStatus;
+    return enrich(s);
+  },
+};
+
+
   ]
   return (
     <>
