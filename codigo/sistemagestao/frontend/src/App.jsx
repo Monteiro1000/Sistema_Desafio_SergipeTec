@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
-//Mock API (substitui axios quando for rodar fora do backend)
-
+// ── Mock API (substitui axios quando rodando fora do backend) ────────────────
 const mockDb = {
   categorias: [
     { id: 1, nome: "Serviços" },
@@ -38,7 +37,7 @@ const TRANSITIONS = {
   CANCELADO:  [],
 };
 
-function status(s) {
+function enrich(s) {
   const sol = mockDb.solicitantes.find(x => x.id === s.solicitanteId) || {};
   const cat = mockDb.categorias.find(x => x.id === s.categoriaId) || {};
   return {
@@ -78,8 +77,7 @@ const mockAPI = {
   },
 };
 
-//Parte visual
-
+// ── Helpers visuais ──────────────────────────────────────────────────────────
 const STATUS_META = {
   SOLICITADO: { label: "Solicitado", color: "#3B82F6", bg: "#EFF6FF", dot: "#2563EB" },
   LIBERADO:   { label: "Liberado",   color: "#8B5CF6", bg: "#F5F3FF", dot: "#7C3AED" },
@@ -88,8 +86,7 @@ const STATUS_META = {
   CANCELADO:  { label: "Cancelado",  color: "#6B7280", bg: "#F9FAFB", dot: "#4B5563" },
 };
 
-
-  function StatusBadge({ status }) {
+function StatusBadge({ status }) {
   const m = STATUS_META[status] || {};
   return (
     <span style={{
